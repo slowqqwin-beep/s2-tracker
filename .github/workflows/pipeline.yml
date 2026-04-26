@@ -24,7 +24,8 @@ jobs:
       - name: Run Analysis
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-        run: |
+        run: 
+          export PYTHONPATH=$PYTHONPATH:.
           python -m src.pipeline --ticker PLTR --period "Q4 2025"
 
       - name: Commit and Push changes
