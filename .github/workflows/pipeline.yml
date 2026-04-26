@@ -4,40 +4,55 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch: 
+    inputs:
+      ticker:
+        description: '只跑单只股票 (留空=跑全部)'
+        default: ''
+      period:
+        description: '财报期'
+        default: 'Q4 2025'
 
 jobs:
-  build:
+  run-pipeline:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
+          # 这一步解决了你说的“找不到路径”：进入套娃文件夹
+          cd s2-tracker/s2-tracker
           pip install openai pandas requests
 
       - name: Run Analysis
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-        run: 
-          # 1. 第一步：打印当前目录内容（万一报错，我们可以看到底有没有 src）
-          ls -R
-          
-          # 2. 第二步：设置 Python 查找路径（注意，这是单独的一行）
+        run: |
+          # 同样进入套娃文件夹运行
+          cd s2-tracker/s2-tracker
           export PYTHONPATH=$PYTHONPATH:.
-          
-          # 3. 第三步：运行代码
           python -m src.pipeline --ticker PLTR --period "Q4 2025"
 
-      - name: Commit and Push changes
+      - name: Commit JSON output
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/processed/*.json
-          git commit -m "Auto-update dashboard data [skip ci]" || exit 0
-          git push
+          git config user.name  "s2-tracker-bot"
+          git config user.email "actions@github.com"
+          
+          # 告诉 GitHub 抓取嵌套文件夹里的结果
+          git add s2-tracker/s2-tracker/data/processed/dashboard_data.json
+          
+          if git diff --staged --quiet; then
+            echo "数据没有变化，跳过提交"
+          else
+            git commit -m "🤖 自动更新财报分析 [$(date +'%Y-%m-%d %H:%M')]"
+            git push
+          fi
