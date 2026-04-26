@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S2 Tracker Dashboard</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // 这里的地址我已经帮你改好了
+        const DATA_URL = "https://raw.githubusercontent.com/slowqqwin-beep/s2-tracker/main/data/processed/dashboard_data.json";
+
+        function Dashboard() {
+            const [data, setData] = React.useState(null);
+            const [loading, setLoading] = React.useState(true);
+
+            React.useEffect(() => {
+                fetch(DATA_URL)
+                    .then(res => res.json())
+                    .then(json => {
+                        setData(json);
+                        setLoading(false);
+                    })
+                    .catch(err => {
+                        console.error("加载失败:", err);
+                        setLoading(false);
+                    });
+            }, []);
+
+            if (loading) return <div class="flex h-screen items-center justify-center">数据加载中...</div>;
+            if (!data) return <div class="flex h-screen items-center justify-center text-red-500">无法读取数据，请检查 Action 是否跑通</div>;
+
+            return (
+                <div class="p-8 max-w-6xl mx-auto">
+                    <h1 class="text-3xl font-bold mb-6 text-gray-800">美股 AI 应用层财报追踪</h1>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {data.map((item, index) => (
+                            <div key={index} class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-2xl font-bold text-blue-600">{item.ticker}</span>
+                                    <span class="text-sm text-gray-500">{item.period}</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <p class="text-sm"><strong class="text-gray-700">AI 核心逻辑:</strong> {item.ai_logic}</p>
+                                    <p class="text-sm"><strong class="text-gray-700">管理层指引:</strong> {item.guidance}</p>
+                                    <div class="pt-4 border-t border-gray-100">
+                                        <div class="flex justify-between text-xs font-semibold">
+                                            <span>AI 信心指数</span>
+                                            <span>{item.confidence_score}/100</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 h-2 rounded-full mt-1">
+                                            <div class="bg-blue-500 h-2 rounded-full" style={{width: `${item.confidence_score}%`}}></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Dashboard />);
+    </script>
+</body>
+</html>
