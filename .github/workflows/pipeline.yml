@@ -29,15 +29,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # 这一步解决了你说的“找不到路径”：进入套娃文件夹
+          # 进入套娃文件夹安装所有必要的库
           cd s2-tracker/s2-tracker
-          pip install openai pandas requests
+          pip install openai pandas requests rich
 
       - name: Run Analysis
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
-          # 同样进入套娃文件夹运行
+          # 进入套娃文件夹跑分析
           cd s2-tracker/s2-tracker
           export PYTHONPATH=$PYTHONPATH:.
           python -m src.pipeline --ticker PLTR --period "Q4 2025"
