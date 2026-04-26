@@ -1,0 +1,61 @@
+{
+  "_comment": "S2 美股 AI 应用层监控池。可随时添加。每只股票要标注 AI 产品名 — Claude 解析 transcript 时会重点提取该产品的相关数据。",
+  "companies": [
+    {
+      "ticker": "PLTR",
+      "name": "Palantir",
+      "category": "数据/分析",
+      "ai_product": "AIP",
+      "ai_keywords": ["AIP", "Artificial Intelligence Platform", "US Commercial"]
+    },
+    {
+      "ticker": "NOW",
+      "name": "ServiceNow",
+      "category": "通用Copilot",
+      "ai_product": "Now Assist",
+      "ai_keywords": ["Now Assist", "GenAI", "Pro Plus", "agentic"]
+    },
+    {
+      "ticker": "CRM",
+      "name": "Salesforce",
+      "category": "CRM/营销",
+      "ai_product": "Agentforce",
+      "ai_keywords": ["Agentforce", "Data Cloud", "Einstein"]
+    },
+    {
+      "ticker": "SNOW",
+      "name": "Snowflake",
+      "category": "数据/分析",
+      "ai_product": "Cortex",
+      "ai_keywords": ["Cortex", "Cortex AI", "Cortex Analyst"]
+    },
+    {
+      "ticker": "DDOG",
+      "name": "Datadog",
+      "category": "数据/分析",
+      "ai_product": "Bits AI",
+      "ai_keywords": ["Bits AI", "AI-native customers", "LLM Observability"]
+    },
+    {
+      "ticker": "MDB",
+      "name": "MongoDB",
+      "category": "数据/分析",
+      "ai_product": "Atlas Vector Search",
+      "ai_keywords": ["Atlas Vector Search", "AI workloads", "vector"]
+    },
+    {
+      "ticker": "GTLB",
+      "name": "GitLab",
+      "category": "代码/开发",
+      "ai_product": "Duo",
+      "ai_keywords": ["Duo", "Duo Pro", "Duo Enterprise"]
+    },
+    {
+      "ticker": "CRWD",
+      "name": "CrowdStrike",
+      "category": "安全",
+      "ai_product": "Charlotte AI",
+      "ai_keywords": ["Charlotte AI", "Falcon", "NG-SIEM"]
+    }
+  ]
+}
